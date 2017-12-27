@@ -9,7 +9,7 @@ export default [
     name: 'home',
     component: Layout,
     redirect: '/dashboard',
-    icon: 'ios-speedometer-outline',
+    icon: 'ios-speedometer',
     inSidebar: true,
     meta: { title: '数据概览' },
     children: [
@@ -20,7 +20,7 @@ export default [
     name: 'ajax',
     inSidebar: true,
     component: Layout,
-    icon: 'ios-lightbulb-outline',
+    icon: 'ios-lightbulb',
     meta: { title: '异步请求' },
     children: [
       { path: 'index', name: 'ajax-index', component: _import('ajax/index'), meta: { title: '异步请求' }}
@@ -28,7 +28,7 @@ export default [
   }, {
     path: '/script',
     name: 'script',
-    icon: 'ios-flask-outline',
+    icon: 'ios-flask',
     inSidebar: true,
     component: Layout,
     meta: { title: '脚本日志' },
@@ -40,7 +40,7 @@ export default [
     name: 'events',
     inSidebar: true,
     component: Layout,
-    icon: 'ios-shuffle',
+    icon: 'ios-cog',
     meta: { title: '自定义事件' },
     children: [
       { path: 'index', name: 'events-index', component: _import('events/index'), meta: { title: '自定义事件' }}

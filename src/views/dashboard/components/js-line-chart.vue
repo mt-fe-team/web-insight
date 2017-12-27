@@ -55,16 +55,6 @@ export default {
       this.chart = echarts.init(document.getElementById(this.id))
 
       this.chart.setOption({
-        backgroundColor: '#394056',
-        title: {
-          text: '脚本日志',
-          textStyle: {
-            fontWeight: 'normal',
-            fontSize: 16,
-            color: '#F1F1F3'
-          },
-          left: '6%'
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -78,12 +68,8 @@ export default {
           itemWidth: 14,
           itemHeight: 5,
           itemGap: 13,
-          data: ['ERROR', 'WARN', 'INFO', 'DEBUG'],
-          right: '4%',
-          textStyle: {
-            fontSize: 12,
-            color: '#F1F1F3'
-          }
+          data: ['错误', '警告', '调试', '日志'],
+          right: '4%'
         },
         grid: {
           left: '3%',
@@ -94,38 +80,52 @@ export default {
         xAxis: [{
           type: 'category',
           boundaryGap: false,
+          data: this.data.timeData,
           axisLine: {
             lineStyle: {
-              color: '#57617B'
+              color: '#d9d9d9'
             }
           },
-          data: this.data.timeData
+          axisLabel: {
+            textStyle: {
+              color: '#333333'
+            }
+          }
         }],
         yAxis: [{
           type: 'value',
           name: '单位（条）',
+          nameTextStyle: {
+            color: '#333'
+          },
           axisTick: {
             show: false
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#57617B'
-            }
           },
           axisLabel: {
             margin: 10,
             textStyle: {
-              fontSize: 14
+              fontSize: 14,
+              color: '#333333'
+            }
+          },
+          axisLine: {
+            lineStyle: {
+              color: '#d9d9d9'
             }
           },
           splitLine: {
             lineStyle: {
-              color: '#57617B'
+              color: ['#d9d9d9']
             }
           }
         }],
+        axis: {
+          lineStyle: {
+            color: '#F6F6F6'
+          }
+        },
         series: [{
-          name: 'ERROR',
+          name: '错误',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -136,30 +136,15 @@ export default {
               width: 1
             }
           },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(137, 189, 27, 0.3)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(137, 189, 27, 0)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
           itemStyle: {
             normal: {
-              color: 'rgb(137,189,27)',
-              borderColor: 'rgba(137,189,2,0.27)',
+              color: '#ec3a43',
               borderWidth: 12
-
             }
           },
           data: this.data.error
         }, {
-          name: 'WARN',
+          name: '警告',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -170,30 +155,15 @@ export default {
               width: 1
             }
           },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(0, 136, 212, 0.3)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(0, 136, 212, 0)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
           itemStyle: {
             normal: {
-              color: 'rgb(0,136,212)',
-              borderColor: 'rgba(0,136,212,0.2)',
+              color: '#ff5b05',
               borderWidth: 12
-
             }
           },
           data: this.data.warn
         }, {
-          name: 'INFO',
+          name: '日志',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -204,29 +174,15 @@ export default {
               width: 1
             }
           },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(219, 50, 51, 0.3)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(219, 50, 51, 0)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
           itemStyle: {
             normal: {
-              color: 'rgb(219,50,51)',
-              borderColor: 'rgba(219,50,51,0.2)',
+              color: '#d9d9d9',
               borderWidth: 12
             }
           },
           data: this.data.info
         }, {
-          name: 'DEBUG',
+          name: '调试',
           type: 'line',
           smooth: true,
           symbol: 'circle',
@@ -237,23 +193,9 @@ export default {
               width: 1
             }
           },
-          areaStyle: {
-            normal: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: 'rgba(219, 50, 51, 0.3)'
-              }, {
-                offset: 0.8,
-                color: 'rgba(219, 50, 51, 0)'
-              }], false),
-              shadowColor: 'rgba(0, 0, 0, 0.1)',
-              shadowBlur: 10
-            }
-          },
           itemStyle: {
             normal: {
-              color: 'rgb(189,100,51)',
-              borderColor: 'rgba(189,100,51,0.2)',
+              color: '#1890ff',
               borderWidth: 12
             }
           },

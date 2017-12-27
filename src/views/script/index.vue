@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import Api from '@/api'
+// import Api from '@/api'
 import LogList from '@/components/log-list'
 import LogDetail from '@/components/log-detail'
 
@@ -87,13 +87,13 @@ export default {
       window.alert(1)
     },
     get7DaysLog (type) {
-      this.spinShow = true
-      Api.logScript.get7DaysLog().then(res => {
-        this.spinShow = false
-        this.logs = res
-        this.type = 'error'
-        this.detail = this.errorList[0] || {}
-      }).catch(e => { this.spinShow = false })
+      // this.spinShow = true
+      // Api.logScript.get7DaysLog().then(res => {
+      //   this.spinShow = false
+      //   this.logs = res
+      //   this.type = 'error'
+      //   this.detail = this.errorList[0] || {}
+      // }).catch(e => { this.spinShow = false })
     },
     onChecked (detail) {
       this.detail = detail
@@ -113,12 +113,3 @@ export default {
     color: #888;
 }
 </style>
-
-// <Row class="script-logitem">
-//   <Col span="20" class="script-logitem-msg">jQuery is not defined</Col>
-//   <Col span="4" class="tr">
-//     <span class="script-logitem-num">2</span>
-//     <Icon class="script-logitem-arrow" type="ios-arrow-right"></Icon>
-//   </Col>
-//   <div class="script-logitem-indicator"><div class="script-logitem-indicator-baffle" style="transform: translateX(5%)"></div></div>
-// </Row>

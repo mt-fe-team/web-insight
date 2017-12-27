@@ -2,7 +2,9 @@
   <div class="main-header">
     <div class="main-header-left">
       <Button type="text" @click="toggleSidebar" class="main-header-toggleicon" :class="{active: sidebarOpened}">
-        <Icon type="navicon" size="32"></Icon>
+        <!-- <Icon type="navicon" size="32"></Icon> -->
+        <i class="iconfont icon-zhankaicaidan-copy f32"></i>
+        
       </Button>
     </div>
     <div class="main-header-middle">
@@ -25,20 +27,17 @@
           <Icon type="locked" :size="20"></Icon>
         </Tooltip>
       </div>
-      <div class="message-box">
+      <!-- <div class="message-box">
         <Tooltip :content="'无未读消息'" placement="bottom">
           <Badge :count="0" dot>
             <Icon type="ios-bell" :size="22"></Icon>
           </Badge>
         </Tooltip>
-      </div>
+      </div> -->
       <div class="user-menu">
         <Row type="flex" justify="end" align="middle" class="user-menu-inner">
-          <Dropdown trigger="click" @on-click="handleClickUserDropdown">
-            <a href="javascript:void(0)">
-              <span class="main-user-name">{{ account.username }}</span>
-              <Icon type="arrow-down-b"></Icon>
-            </a>
+          <Dropdown trigger="click" @on-click="handleClickUserDropdown" placement="bottom-end">
+            <span class="main-user-name f16 tc">{{ account.username }}</span>
             <DropdownMenu slot="list">
               <DropdownItem name="logout">退出登录</DropdownItem>
             </DropdownMenu>
@@ -133,11 +132,10 @@ export default {
   z-index: 10;
   background: rgb(255, 255, 255);
   &-toggleicon.active {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
   }
   &-left {
     display: inline-block;
-    margin: 6px;
   }
   &-middle {
     position: absolute;
@@ -156,7 +154,6 @@ export default {
     right: 0px;
     top: 0px;
     height: 100%;
-    width: 180px;
     .full-screen, .lock-screen, .message-box{
       display: inline-block;
       width: 30px;
@@ -166,11 +163,8 @@ export default {
       vertical-align: top;
     }
     .user-menu {
-      position: absolute;
-      right: 0px;
-      top: 0px;
-      width: 110px;
       height: 100%;
+      display: inline-block;
       &-inner {
         height: 100%;
         padding-right: 14px;

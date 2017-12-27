@@ -5,18 +5,18 @@
     @on-select="changeMenu">
     <template v-for="item in menus">
       <MenuItem v-if="item.children.length === 1" :name="item.children[0].name" :key="item.path">
-          <Icon :type="item.icon" :size="sidebarOpened?14:24" :key="item.path"></Icon>
+          <Icon :type="item.icon" :size="sidebarOpened?18:20" :key="item.path"></Icon>
           <span class="main-sidebar-text" :key="item.path">{{ item.meta.title }}</span>
       </MenuItem>
 
       <Submenu v-if="item.children.length > 1" :name="item.name" :key="item.path">
           <template slot="title">
-              <Icon :type="item.icon" :size="sidebarOpened?14:24"></Icon>
+              <Icon :type="item.icon" :size="sidebarOpened?18:20"></Icon>
               <span class="main-sidebar-text">{{ item.meta.title }}</span>
           </template>
           <template v-for="child in item.children">
               <MenuItem :name="child.name" :key="child.name">
-                <Icon :type="child.icon" :size="sidebarOpened?14:24" :key="child.name"></Icon>
+                <Icon :type="child.icon" :size="sidebarOpened?18:20" :key="child.name"></Icon>
                 <span class="main-sidebar-text" :key="child.name">{{ child.meta.title }}</span>
               </MenuItem>
           </template>

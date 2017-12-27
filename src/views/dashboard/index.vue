@@ -1,118 +1,182 @@
 <template>
   <div>
-    <div class="mb10">
-      <Row :gutter="20">
-        <Col span="6">
-          <info-card color="#ffd572" iconType="ios-eye" :endVal="jsWarnNum" desc="脚本警告次数" />
-        </Col>
-        <Col span="6">
-          <info-card color="#f25e43" iconType="upload" :endVal="jsErrorNum" desc="脚本错误次数" />
-        </Col>
-        <Col span="6">
-          <info-card color="#ffd572" iconType="shuffle" :endVal="ajaxFailNum" desc="API请求失败次数" />
-        </Col>
-        <Col span="6">
-          <info-card color="#f25e43" iconType="android-person-add" :endVal="ajaxErrorNum" desc="API请求异常次数" />
-        </Col>
-      </Row>
-    </div>
-    <div class="mb10 h200">
-      <script-live-chart :data="jsLogLiveChartData"/>
-    </div>
-    <Row :gutter="20">
-      <Col span="8">
-      <Card>
-        <p slot="title" class="card-title">
-          <Icon type="android-map"></Icon>
-          最近一周API调用异常统计
-        </p>
-        <div class="data-source-row h200">
-          <visite-volume></visite-volume>
-        </div>
-      </Card>
-      </Col>
-      <Col span="8" class="padding-left-10">
-      <Card>
-        <p slot="title" class="card-title">
-          <Icon type="ios-pulse-strong"></Icon>
-          最近一周脚本日志统计
-        </p>
-        <div class="data-source-row h200">
-          <data-source-pie
-            :error="jsErrorNum"
-            :warn="jsWarnNum"
-            :info="jsInfoNum"
-            :debug="jsDebugNum">
-          </data-source-pie>
-        </div>
-      </Card>
-      </Col>
-      <Col span="8" class="padding-left-10">
-      <Card>
-        <p slot="title" class="card-title">
-          <Icon type="android-wifi"></Icon>
-          最近一周用户事件触发次数统计
-        </p>
-        <div class="data-source-row h200">
-          <user-flow></user-flow>
-        </div>
-      </Card>
-      </Col>
-    </Row>
+    <Card :padding="0" class="mb20">
+      <div slot="title" class="ui-card-title">
+        <Icon type="ios-pulse-strong"></Icon>
+        脚本日志统计
+      </div>
+      <div slot="extra" style="margin-top: -10px;">
+        <Button type="text" size="large">最近7天</Button>
+        <Button type="text" size="large">昨日</Button>
+        <Button type="text" size="large">今日</Button>
+        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+      </div>
+      <div>
+        <Row >
+          <Col span="4 bdr-r">
+            <Row class="jslog-num-info bdr-b">
+                <Col span="8"><i class="ui-dot-state ui-dot-state__rd"></i> 错误</Col>
+                <Col span="16" class="f24 tr">12</Col>
+            </Row>
+            <Row class="jslog-num-info bdr-b">
+                <Col span="8"><i class="ui-dot-state ui-dot-state__or"></i> 警告</Col>
+                <Col span="16" class="f24 tr">3</Col>
+            </Row>
+            <Row class="jslog-num-info bdr-b">
+                <Col span="8"><i class="ui-dot-state ui-dot-state__bl"></i> 调试</Col>
+                <Col span="16" class="f24 tr">6</Col>
+            </Row>
+            <Row class="jslog-num-info">
+                <Col span="8"><i class="ui-dot-state"></i> 日志</Col>
+                <Col span="16" class="f24 tr">0</Col>
+            </Row>
+          </Col>
+          <Col span="20 pt20">
+            <js-line-chart height="220px" :data="jsChartData" id="jslogChart"/>
+          </Col>
+        </Row>
+      </div>
+    </Card>
+  
+    <Card :padding="0" class="mb20">
+      <div slot="title" class="ui-card-title">
+        <Icon type="ios-pulse-strong"></Icon>
+        API调用统计
+      </div>
+      <div slot="extra" style="margin-top: -10px;">
+        <Button type="text" size="large">最近7天</Button>
+        <Button type="text" size="large">昨日</Button>
+        <Button type="text" size="large">今日</Button>
+        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+      </div>
+      <div>
+        <Row>
+          <Col span="4 bdr-r">
+            <Row class="apilog-num-info bdr-b">
+                <Col span="8"><i class="ui-dot-state ui-dot-state__rd"></i> 失败</Col>
+                <Col span="16" class="f24 tr">2</Col>
+            </Row>
+            <Row class="apilog-num-info bdr-b">
+                <Col span="8"><i class="ui-dot-state ui-dot-state__or"></i> 异常</Col>
+                <Col span="16" class="f24 tr">34</Col>
+            </Row>
+            <Row class="apilog-num-info">
+                <Col span="8"><i class="ui-dot-state"></i> 日志</Col>
+                <Col span="16" class="f24 tr">2</Col>
+            </Row>
+          </Col>
+          <Col span="20 pt20">
+            <api-line-chart height="180px" :data="ajaxChartData" id="ajaxlogChart"/>
+          </Col>
+        </Row>
+      </div>
+    </Card>
+
+    <Card :padding="0" class="mb20">
+      <div slot="title" class="ui-card-title">
+        <Icon type="ios-pulse-strong"></Icon>
+        事件触发统计
+      </div>
+      <div slot="extra" style="margin-top: -10px;">
+        <Button type="text" size="large">最近7天</Button>
+        <Button type="text" size="large">昨日</Button>
+        <Button type="text" size="large">今日</Button>
+        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+      </div>
+      <div>
+        <Row>
+          <Col span="4 p10">
+              <table class="eventlog-tbl-info">
+                <colgroup>
+                  <col width="70%">
+                </colgroup>
+                <tr><td>客服转化订单数</td><td>20</td></tr>
+                <tr><td>添加体检人次数</td><td>20</td></tr>
+                <tr><td>完善信息次数</td><td>20</td></tr>
+              </table>
+          </Col>
+          <Col span="20" class="bdr-l" style="height: 500px;">
+            <EventBarChart :data="eventChartData"/>
+          </Col>
+        </Row>
+      </div>
+    </Card>
+
   </div>
 </template>
 
 <script>
-// import ScriptLiveChart from '@/components/charts/line-chart'
-// import LineChart from '@/components/charts/line-chart'
-import InfoCard from './components/info-card'
-import ScriptLiveChart from './components/script-live-chart'
-import DataSourcePie from './components/data-source-pie'
-import UserFlow from './components/user-flow'
-import VisiteVolume from './components/visite-volume'
+import JsLineChart from './components/js-line-chart'
+import ApiLineChart from './components/api-line-chart'
+import EventBarChart from './components/event-bar-chart'
 
-import Api from '@/api'
+// import Api from '@/api'
 import moment from 'moment'
 
 export default {
   name: 'Dashboard',
   data () {
     return {
-      jsErrorNum: 0,
-      jsWarnNum: 0,
-      jsInfoNum: 0,
-      jsDebugNum: 0,
-      ajaxErrorNum: 0,
-      ajaxFailNum: 0,
-      jsLogLiveChartData: {
+      jsInfo: {
+        errorNum: 0,
+        warnNum: 0,
+        infoNum: 0,
+        debugNum: 0,
+        startTime: 0,
+        endTime: 0
+      },
+      ajaxInfo: {
+        errorNum: 0,
+        failNum: 0,
+        list: [],
+        startTime: 0,
+        endTime: 0
+      },
+      eventInfo: {
+        serviceOrderNum: 0,
+        list: []
+      },
+
+      jsChartData: {
         xAxis: [],
         error: [],
         warn: [],
         info: [],
         debug: []
       },
-      jsList: [],
-      ajaxList: []
+      ajaxChartData: {
+        xAxis: [],
+        error: [],
+        warn: []
+      },
+      eventChartData: {
+        xAxis: [],
+        error: []
+      }
     }
   },
   components: {
-    // LineChart,
-    ScriptLiveChart,
-    InfoCard,
-    DataSourcePie,
-    UserFlow,
-    VisiteVolume
+    JsLineChart, EventBarChart, ApiLineChart
   },
   mounted () {
-    Api.logAjax.get7DaysLogLive(this.updateAjax).then(list => {
-      this.ajaxList = list
-      this.formatAjaxData(list)
-    })
-    Api.logScript.get7DaysLogLive(this.updateScript).then(list => {
-      this.jsList = list
-      this.formatJsData(list)
-      this.getJs7Days4Chart(list)
-    })
+    // const { jsInfo, ajaxInfo, eventInfo } = this
+    // Api.getListByTime('script', jsInfo.startTime, jsInfo.endTime).then(list => {
+    //   console.log(list)
+    // })
+
+    // Api.getListByTime('ajax', jsInfo.startTime, jsInfo.endTime).then(list => {
+    //   console.log(list)
+    // })
+
+    // Api.logAjax.get7DaysLogLive(this.updateAjax).then(list => {
+    //   this.ajaxList = list
+    //   this.formatAjaxData(list)
+    // })
+    // Api.logScript.get7DaysLogLive(this.updateScript).then(list => {
+    //   this.jsList = list
+    //   this.formatJsData(list)
+    //   this.getJs7Days4Chart(list)
+    // })
   },
   methods: {
     updateAjax (list) {
@@ -199,3 +263,44 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+@import '../../assets/css/var.less';
+
+.jslog-num-info {
+  height: 60px;
+  padding: 0 15px;
+  line-height: 60px;
+  font-size: 16px;
+}
+.apilog-num-info {
+  height: 70px;
+  padding: 0 15px;
+  line-height: 70px;
+  font-size: 16px;
+}
+.ui-dot-state{
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+  background-color: #d9d9d9;
+  &__rd {background-color: @brand-error;}
+  &__bl {background-color: @brand-info;}
+  &__or {background-color: @brand-warning;}
+  &__gr {background-color: @brand-success;}
+}
+.eventlog-tbl-info {
+  width: 100%;
+  table-layout: fixed;
+  td { padding: 10px 5px; font-size: 16px;}
+  tr > td:last-child {text-align: right}
+}
+.ui-card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+</style>
+

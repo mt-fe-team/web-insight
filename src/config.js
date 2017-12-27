@@ -1,3 +1,1 @@
-export default {
-  
-}
+export const events = ['service-order']

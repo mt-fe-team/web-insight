@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Api from '@/api'
+// import Api from '@/api'
 import LogList from '@/components/log-list'
 import LogDetail from '@/components/log-detail'
 
@@ -73,13 +73,13 @@ export default {
   },
   methods: {
     get7DaysLog (type) {
-      this.spinShow = true
-      Api.logAjax.get7DaysLog().then(res => {
-        this.spinShow = false
-        this.logs = res
-        this.type = 'error'
-        this.detail = this.errorList[0] || {}
-      }).catch(e => { this.spinShow = false })
+      // this.spinShow = true
+      // Api.logAjax.get7DaysLog().then(res => {
+      //   this.spinShow = false
+      //   this.logs = res
+      //   this.type = 'error'
+      //   this.detail = this.errorList[0] || {}
+      // }).catch(e => { this.spinShow = false })
     },
     onChecked (detail) {
       this.detail = detail

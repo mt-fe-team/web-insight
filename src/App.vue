@@ -5,8 +5,33 @@
 </template>
 
 <script>
+import Api from '@/api'
+import moment from 'moment'
+import { events } from '@/config'
+
 export default {
-  name: 'app'
+  name: 'app',
+  mounted () {
+    // 获取所有今日的数据，并缓存
+    const startTime = moment(moment().format('YYYY-MM-DD 00:00:00')).toDate()
+
+    // 各事件列表
+    events.map(v => {
+      Api.getListByTime(`event_${v}`, startTime).then(list => {
+        console.log(v, list)
+      })
+    })
+
+    // 脚本日志
+    Api.getListByTime('script', startTime).then(list => {
+      console.log('script', list)
+    })
+
+    // api日志
+    Api.getListByTime('ajax', startTime).then(list => {
+      console.log('ajax', list)
+    })
+  }
 }
 </script>
 
