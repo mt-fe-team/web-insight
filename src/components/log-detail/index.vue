@@ -17,7 +17,6 @@
       <Col span="4" class="tr">发生页面</Col>
       <Col span="20" class="c-8 brk">{{ detail.page }}</Col>
     </Row>
-
      <Row :gutter="10" class="mb10" type="flex" v-if="type === 'ajax'">
       <Col span="4" class="tr">API</Col>
       <Col span="20" class="c-8 brk">{{ detail.api }}</Col>

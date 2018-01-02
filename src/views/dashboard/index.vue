@@ -1,87 +1,109 @@
 <template>
   <div>
-    <Card :padding="0" class="mb20">
+    <Card :padding="0" class="mb20" shadow>
       <div slot="title" class="ui-card-title">
         <Icon type="ios-pulse-strong"></Icon>
         脚本日志统计
       </div>
       <div slot="extra" style="margin-top: -10px;">
-        <Button type="text" size="large">最近7天</Button>
-        <Button type="text" size="large">昨日</Button>
-        <Button type="text" size="large">今日</Button>
-        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+        <Button type="text" size="large" :class="{'c-bl': jsTimeType == 'week'}" @click="changeTime('js','week')">最近7天</Button>
+        <Button type="text" size="large" :class="{'c-bl': jsTimeType == 'yesterday'}" @click="changeTime('js','yesterday')">昨日</Button>
+        <Button type="text" size="large" :class="{'c-bl': jsTimeType == 'today'}" @click="changeTime('js','today')">今日</Button>
+        <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" :clearable="false"
+        v-model="jsRangeTime" @on-change="changeRangeTime('js')"></Date-picker>
+        <a class="dib pl10" href="#" @click.prevent="refreshChart('js')">
+            <Icon type="ios-loop-strong f16"></Icon>
+        </a>
       </div>
       <div>
         <Row >
           <Col span="4 bdr-r">
             <Row class="jslog-num-info bdr-b">
                 <Col span="8"><i class="ui-dot-state ui-dot-state__rd"></i> 错误</Col>
-                <Col span="16" class="f24 tr">12</Col>
+                <Col span="16" class="f24 tr">
+                  <counter :endVal="jsErrorNum" />
+                </Col>
             </Row>
             <Row class="jslog-num-info bdr-b">
                 <Col span="8"><i class="ui-dot-state ui-dot-state__or"></i> 警告</Col>
-                <Col span="16" class="f24 tr">3</Col>
+                <Col span="16" class="f24 tr">
+                  <counter :endVal="jsWarnNum" />
+                </Col>
             </Row>
             <Row class="jslog-num-info bdr-b">
                 <Col span="8"><i class="ui-dot-state ui-dot-state__bl"></i> 调试</Col>
-                <Col span="16" class="f24 tr">6</Col>
+                <Col span="16" class="f24 tr">
+                  <counter :endVal="jsDebugNum" />
+                </Col>
             </Row>
             <Row class="jslog-num-info">
                 <Col span="8"><i class="ui-dot-state"></i> 日志</Col>
-                <Col span="16" class="f24 tr">0</Col>
+                <Col span="16" class="f24 tr">
+                  <counter :endVal="jsInfoNum" />
+                </Col>
             </Row>
           </Col>
           <Col span="20 pt20">
-            <js-line-chart height="220px" :data="jsChartData" id="jslogChart"/>
+            <js-bar-chart height="220px" :data="jsChartData" :loading="jsChartLoading" id="jslogChart"/>
           </Col>
         </Row>
       </div>
     </Card>
   
-    <Card :padding="0" class="mb20">
+    <Card :padding="0" class="mb20" shadow>
       <div slot="title" class="ui-card-title">
         <Icon type="ios-pulse-strong"></Icon>
         API调用统计
       </div>
       <div slot="extra" style="margin-top: -10px;">
-        <Button type="text" size="large">最近7天</Button>
-        <Button type="text" size="large">昨日</Button>
-        <Button type="text" size="large">今日</Button>
-        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+        <Button type="text" size="large" :class="{'c-bl': apiTimeType == 'week'}" @click="changeTime('api','week')">最近7天</Button>
+        <Button type="text" size="large" :class="{'c-bl': apiTimeType == 'yesterday'}" @click="changeTime('api','yesterday')">昨日</Button>
+        <Button type="text" size="large" :class="{'c-bl': apiTimeType == 'today'}" @click="changeTime('api','today')">今日</Button>
+        <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" :clearable="false"
+          v-model="apiRangeTime" @on-change="changeRangeTime('api')"
+        ></Date-picker>
+        <a class="dib pl10" href="#" @click.prevent="refreshChart('api')">
+            <Icon type="ios-loop-strong f16"></Icon>
+        </a>
       </div>
       <div>
         <Row>
           <Col span="4 bdr-r">
             <Row class="apilog-num-info bdr-b">
                 <Col span="8"><i class="ui-dot-state ui-dot-state__rd"></i> 失败</Col>
-                <Col span="16" class="f24 tr">2</Col>
+                <Col span="16" class="f24 tr"><counter :endVal="apiErrorNum" /></Col>
             </Row>
             <Row class="apilog-num-info bdr-b">
                 <Col span="8"><i class="ui-dot-state ui-dot-state__or"></i> 异常</Col>
-                <Col span="16" class="f24 tr">34</Col>
+                <Col span="16" class="f24 tr"><counter :endVal="apiFailNum" /></Col>
             </Row>
             <Row class="apilog-num-info">
-                <Col span="8"><i class="ui-dot-state"></i> 日志</Col>
-                <Col span="16" class="f24 tr">2</Col>
+                <Col span="8"><i class="ui-dot-state ui-dot-state__gr"></i> 成功</Col>
+                <Col span="16" class="f24 tr"><counter :endVal="apiSuccessNum" /></Col>
             </Row>
           </Col>
           <Col span="20 pt20">
-            <api-line-chart height="180px" :data="ajaxChartData" id="ajaxlogChart"/>
+            <api-bar-chart height="220px" :data="apiChartData" :loading="apiChartLoading" id="apilogChart"/>
           </Col>
         </Row>
       </div>
     </Card>
 
-    <Card :padding="0" class="mb20">
+    <Card :padding="0" class="mb20" shadow>
       <div slot="title" class="ui-card-title">
         <Icon type="ios-pulse-strong"></Icon>
         事件触发统计
       </div>
       <div slot="extra" style="margin-top: -10px;">
-        <Button type="text" size="large">最近7天</Button>
-        <Button type="text" size="large">昨日</Button>
-        <Button type="text" size="large">今日</Button>
-        <!-- <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px"></Date-picker> -->
+        <Button type="text" size="large" :class="{'c-bl': eventTimeType == 'week'}" @click="changeTime('event','week')">最近7天</Button>
+        <Button type="text" size="large" :class="{'c-bl': eventTimeType == 'yesterday'}" @click="changeTime('event','yesterday')">昨日</Button>
+        <Button type="text" size="large" :class="{'c-bl': eventTimeType == 'today'}" @click="changeTime('event','today')">今日</Button>
+        <Date-picker type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" :clearable="false"
+        v-model="eventRangeTime" @on-change="changeRangeTime('event')"
+        ></Date-picker>
+        <a class="dib pl10" href="#" @click.prevent="refreshChart('event')">
+            <Icon type="ios-loop-strong f16"></Icon>
+        </a>
       </div>
       <div>
         <Row>
@@ -90,13 +112,11 @@
                 <colgroup>
                   <col width="70%">
                 </colgroup>
-                <tr><td>客服转化订单数</td><td>20</td></tr>
-                <tr><td>添加体检人次数</td><td>20</td></tr>
-                <tr><td>完善信息次数</td><td>20</td></tr>
+                <tr v-for="item in eventNums" :key="item.key"><td class="ell" :title="item.name">{{item.name}}</td><td>{{item.count}}</td></tr>
               </table>
           </Col>
           <Col span="20" class="bdr-l" style="height: 500px;">
-            <EventBarChart :data="eventChartData"/>
+            <EventBarChart :data="eventChartData" :loading="eventChartLoading" id="eventChart"/>
           </Col>
         </Row>
       </div>
@@ -106,159 +126,119 @@
 </template>
 
 <script>
-import JsLineChart from './components/js-line-chart'
-import ApiLineChart from './components/api-line-chart'
+import { mapGetters } from 'vuex'
+import Utils from '@/common/utils'
+import Counter from '@/components/counter'
+import JsBarChart from './components/js-bar-chart'
+import ApiBarChart from './components/api-bar-chart'
 import EventBarChart from './components/event-bar-chart'
-
-// import Api from '@/api'
-import moment from 'moment'
 
 export default {
   name: 'Dashboard',
   data () {
+    const { startTime, endTime } = Utils.getTimeSlot('today')
     return {
-      jsInfo: {
-        errorNum: 0,
-        warnNum: 0,
-        infoNum: 0,
-        debugNum: 0,
-        startTime: 0,
-        endTime: 0
-      },
-      ajaxInfo: {
-        errorNum: 0,
-        failNum: 0,
-        list: [],
-        startTime: 0,
-        endTime: 0
-      },
-      eventInfo: {
-        serviceOrderNum: 0,
-        list: []
-      },
-
-      jsChartData: {
-        xAxis: [],
-        error: [],
-        warn: [],
-        info: [],
-        debug: []
-      },
-      ajaxChartData: {
-        xAxis: [],
-        error: [],
-        warn: []
-      },
-      eventChartData: {
-        xAxis: [],
-        error: []
-      }
+      jsTimeType: 'today',
+      apiTimeType: 'today',
+      eventTimeType: 'today',
+      initStartTime: startTime,
+      initEndTime: endTime,
+      jsRangeTime: [startTime, endTime],
+      apiRangeTime: [startTime, endTime],
+      eventRangeTime: [startTime, endTime]
     }
   },
   components: {
-    JsLineChart, EventBarChart, ApiLineChart
+    JsBarChart, EventBarChart, ApiBarChart, Counter
+  },
+  computed: {
+    ...mapGetters([
+      'jsErrorNum',
+      'jsWarnNum',
+      'jsDebugNum',
+      'jsInfoNum',
+      'jsChartData',
+      'apiErrorNum',
+      'apiFailNum',
+      'apiSuccessNum',
+      'apiChartData',
+      'jsChartLoading',
+      'apiChartLoading',
+      'eventChartLoading',
+      'eventNums',
+      'eventChartData'
+    ])
   },
   mounted () {
-    // const { jsInfo, ajaxInfo, eventInfo } = this
-    // Api.getListByTime('script', jsInfo.startTime, jsInfo.endTime).then(list => {
-    //   console.log(list)
-    // })
-
-    // Api.getListByTime('ajax', jsInfo.startTime, jsInfo.endTime).then(list => {
-    //   console.log(list)
-    // })
-
-    // Api.logAjax.get7DaysLogLive(this.updateAjax).then(list => {
-    //   this.ajaxList = list
-    //   this.formatAjaxData(list)
-    // })
-    // Api.logScript.get7DaysLogLive(this.updateScript).then(list => {
-    //   this.jsList = list
-    //   this.formatJsData(list)
-    //   this.getJs7Days4Chart(list)
-    // })
+    const { startTime, endTime } = Utils.getTimeSlot('today')
+    this.$store.dispatch(this.$$types.GET_JS_CHARTDATA, { startTime, endTime })
+    this.$store.dispatch(this.$$types.GET_API_CHARTDATA, { startTime, endTime })
+    this.$store.dispatch(this.$$types.GET_EVENT_CHARTDATA, { startTime, endTime })
   },
   methods: {
-    updateAjax (list) {
-      this.ajaxList = list
-      this.formatAjaxData(list)
-    },
-    updateScript (list) {
-      this.jsList = list
-      this.formatJsData(list)
-      this.getJs7Days4Chart(list)
-    },
-    formatJsData (list) {
-      const countRes = list.reduce((p, n) => {
-        p[n.level]++
-        return p
-      }, { error: 0, warn: 0, info: 0, debug: 0 })
+    changeTime (type, state) {
+      if (type === 'js' && state === this.jsTimeType) return
+      if (type === 'api' && state === this.apiTimeType) return
+      if (type === 'event' && state === this.eventTimeType) return
 
-      this.jsErrorNum = countRes.error
-      this.jsWarnNum = countRes.warn
-      this.jsInfoNum = countRes.info
-      this.jsDebugNum = countRes.debug
+      const { startTime, endTime } = Utils.getTimeSlot(state)
+      switch (type) {
+        case 'js':
+          this.jsTimeType = state
+          this.jsRangeTime = [startTime, endTime]
+          this.$store.dispatch(this.$$types.GET_JS_CHARTDATA, { startTime, endTime })
+          break
+        case 'api':
+          this.apiTimeType = state
+          this.apiRangeTime = [startTime, endTime]
+          this.$store.dispatch(this.$$types.GET_API_CHARTDATA, { startTime, endTime })
+          break
+        case 'event':
+          this.eventTimeType = state
+          this.eventRangeTime = [startTime, endTime]
+          this.$store.dispatch(this.$$types.GET_EVENT_CHARTDATA, { startTime, endTime })
+          break
+      }
     },
-    formatAjaxData (list) {
-      const countRes = list.reduce((p, n) => {
-        p[n.type]++
-        return p
-      }, { error: 0, fail: 0, isuccessnfo: 0 })
 
-      this.ajaxErrorNum = countRes.error
-      this.ajaxFailNum = countRes.fail
-    },
-    getJs7Days4Chart (list) {
-      const timeArr = [
-        moment().add(-6, 'days'),
-        moment().add(-5, 'days'),
-        moment().add(-4, 'days'),
-        moment().add(-3, 'days'),
-        moment().add(-2, 'days'),
-        moment().add(-1, 'days'),
-        moment()
-      ]
-
-      const rows = list.reduce((p, n) => {
-        if (moment(n.createdAt).isBefore(timeArr[1])) {
-          p.d1.push(n)
-        } else if (moment(n.createdAt).isBefore(timeArr[2])) {
-          p.d2.push(n)
-        } else if (moment(n.createdAt).isBefore(timeArr[3])) {
-          p.d3.push(n)
-        } else if (moment(n.createdAt).isBefore(timeArr[4])) {
-          p.d4.push(n)
-        } else if (moment(n.createdAt).isBefore(timeArr[5])) {
-          p.d5.push(n)
-        } else if (moment(n.createdAt).isBefore(timeArr[6])) {
-          p.d6.push(n)
+    changeRangeTime (type) {
+      this.$nextTick(() => {
+        let st, et, TYPE
+        if (type === 'js') {
+          this.jsTimeType = ''
+          st = this.jsRangeTime[0]
+          et = this.jsRangeTime[1]
+          TYPE = this.$$types.GET_JS_CHARTDATA
+        } else if (type === 'api') {
+          this.apiTimeType = ''
+          st = this.apiRangeTime[0]
+          et = this.apiRangeTime[1]
+          TYPE = this.$$types.GET_API_CHARTDATA
         } else {
-          p.d7.push(n)
+          this.eventTimeType = ''
+          st = this.eventRangeTime[0]
+          et = this.eventRangeTime[1]
+          TYPE = this.$$types.GET_EVENT_CHARTDATA
         }
-        return p
-      }, { d1: [], d2: [], d3: [], d4: [], d5: [], d6: [], d7: [] })
 
-      Object.keys(rows).forEach(v => {
-        if (rows[v].length) {
-          rows[v] = rows[v].reduce((p, n) => {
-            p[n.level]++
-            return p
-          }, { error: 0, warn: 0, debug: 0, info: 0 })
-        } else {
-          rows[v] = { error: 0, warn: 0, debug: 0, info: 0 }
-        }
+        this.$store.dispatch(TYPE, { startTime: Utils.startOfDay(st), endTime: Utils.endOfDay(et) })
       })
+    },
 
-      const res = Object.keys(rows).reduce((p, n) => {
-        p.error.push(rows[n].error)
-        p.warn.push(rows[n].warn)
-        p.info.push(rows[n].info)
-        p.debug.push(rows[n].debug)
-        return p
-      }, { error: [], warn: [], info: [], debug: [] })
+    refreshChart (type) {
+      let startTime, endTime, TYPE
+      if (type === 'js') {
+        [startTime, endTime] = this.jsRangeTime
+        TYPE = this.$$types.GET_JS_CHARTDATA
+      } else if (type === 'api') {
+        [startTime, endTime] = this.apiRangeTime
+        TYPE = this.$$types.GET_API_CHARTDATA
+      } else {
+        [startTime, endTime] = this.eventRangeTime
+        TYPE = this.$$types.GET_EVENT_CHARTDATA
+      }
 
-      res.xAxis = timeArr.map(v => v.format('MM-DD'))
-      this.jsLogLiveChartData = res
+      this.$store.dispatch(TYPE, { startTime, endTime })
     }
   }
 }
@@ -274,9 +254,9 @@ export default {
   font-size: 16px;
 }
 .apilog-num-info {
-  height: 70px;
+  height: 80px;
   padding: 0 15px;
-  line-height: 70px;
+  line-height: 80px;
   font-size: 16px;
 }
 .ui-dot-state{

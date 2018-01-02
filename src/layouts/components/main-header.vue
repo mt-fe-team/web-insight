@@ -50,7 +50,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Cookies from 'js-cookie'
+import store from 'store'
 
 export default {
   name: 'MainNavbar',
@@ -107,11 +107,11 @@ export default {
       lockScreenBack.style.boxShadow = '0 0 0 ' + this.lockScreenSize + 'px #667aa6 inset'
       this.showUnlock = true
       // 本地存储锁屏之前打开的页面以便解锁后打开
-      Cookies.set('last_page_name', this.$route.name)
+      store.set('last_page_name', this.$route.name)
 
       // 退出登录状态
       this.$store.dispatch(this.$$types.LOGOUT).then(res => {
-        Cookies.set('locking', 1)
+        store.set('locking', 1)
         setTimeout(() => {
           lockScreenBack.style.transition = 'all 0s'
           this.$router.push({

@@ -9,8 +9,8 @@
         </div>
         <DropdownMenu slot="list" :style="{width: sidebarOpened ? '160px' : '60px'}">
           <DropdownItem name="Mobile" :selected="currentSystem === 'Mobile'">Mobile</DropdownItem>
-          <DropdownItem name="CRM" :selected="currentSystem === 'CRM'">CRM</DropdownItem>
-          <DropdownItem name="OPS" :selected="currentSystem === 'OPS'">OPS</DropdownItem>
+          <!-- <DropdownItem name="CRM" :selected="currentSystem === 'CRM'">CRM</DropdownItem>
+          <DropdownItem name="OPS" :selected="currentSystem === 'OPS'">OPS</DropdownItem> -->
         </DropdownMenu>
       </Dropdown>
 
@@ -34,7 +34,7 @@ import MainFooter from './components/main-footer'
 import MainHistory from './components/main-history'
 import MainContent from './components/main-content'
 import Utils from '@/common/utils'
-import Cookies from 'js-cookie'
+import store from 'store'
 
 export default {
   name: 'Layout',
@@ -57,7 +57,7 @@ export default {
   },
   mounted () {
     // 问候信息相关
-    if (!Cookies.get('hasGreet')) {
+    if (!store.get('hasGreet')) {
       const now = new Date()
       const hour = now.getHours()
       let greetingWord = {
@@ -91,7 +91,7 @@ export default {
         duration: 4,
         name: 'greeting'
       })
-      Cookies.set('hasGreet', 1)
+      store.set('hasGreet', 1)
     }
 
     // 初始化面包屑导航

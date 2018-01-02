@@ -23,6 +23,14 @@ export const SET_OPENED_MENUS = 'app/SET_OPENED_MENUS'
 // - 取消打开的菜单
 export const CLEARE_OPENED_MENUS = 'app/CLEARE_OPENED_MENUS'
 
+// - 设置脚本、api、事件日志图表数据
+export const GET_JS_CHARTDATA = 'app/GET_JS_CHARTDATA'
+export const GET_API_CHARTDATA = 'app/GET_API_CHARTDATA'
+export const GET_EVENT_CHARTDATA = 'app/GET_EVENT_CHARTDATA'
+export const JS_CHART_LOADING = 'app/JS_CHART_LOADING'
+export const API_CHART_LOADING = 'app/API_CHART_LOADING'
+export const EVENT_CHART_LOADING = 'app/EVENT_CHART_LOADING'
+
 // 用户
 export const FETCH_USER = 'user/FETCH_USER'
 export const LOGIN = 'user/LOGIN'

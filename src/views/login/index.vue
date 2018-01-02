@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+import store from 'store'
 
 export default {
   data () {
@@ -69,7 +69,7 @@ export default {
             this.$Loading.finish()
             this.$Message.success('登录成功')
             // 缓存下用户名，方便用户在锁屏之后解锁时，直接使用当前用户名
-            Cookies.set('username', res.username)
+            store.set('username', res.username)
             setTimeout(() => this.$router.push({ name: 'home' }), 1000)
           })
           .catch(err => {

@@ -24,9 +24,18 @@ export default {
       type: String,
       default: '100%'
     },
+    loading: {
+      type: Boolean,
+      default: false
+    },
     data: {
       type: Object,
-      default: {}
+      default: () => {
+        return {
+          yAxis: null,
+          data: null
+        }
+      }
     }
   },
   data () {
@@ -54,7 +63,9 @@ export default {
         },
         legend: {
           data: ['事件触发次数'],
-          x: 'right'
+          itemWidth: 14,
+          itemHeight: 14,
+          right: '4%'
         },
         calculable: true,
         grid: {
@@ -69,7 +80,8 @@ export default {
             boundaryGap: [0, 0.01],
             axisLine: {
               lineStyle: {
-                color: '#d9d9d9'
+                color: '#E6E6E6',
+                width: 2
               }
             },
             axisLabel: {
@@ -82,7 +94,7 @@ export default {
         yAxis: [
           {
             type: 'category',
-            data: ['客服转化订单数', '添加体检人次数', '完善信息次数'],
+            data: this.data.yAxis,
             axisTick: {
               show: false
             },
@@ -95,7 +107,8 @@ export default {
             },
             axisLine: {
               lineStyle: {
-                color: '#d9d9d9'
+                color: '#E6E6E6',
+                width: 2
               }
             },
             splitLine: {
@@ -109,7 +122,7 @@ export default {
           {
             name: '事件触发次数',
             type: 'bar',
-            data: [20, 80, 5],
+            data: this.data.data,
             barWidth: 40,
             barMaxWidth: 40,
             itemStyle: {
@@ -124,21 +137,29 @@ export default {
         ]
       })
 
-      // this.$nextTick(() => {
-      //   window.addEventListener('resize', () => this.chart.resize())
-      // })
+      // this.showLoading()
+    },
+    showLoading () {
+      this.chart && this.chart.showLoading({ title: '正在努力加载中', color: '#2D8CF0' })
+    },
+    hideLoading () {
+      this.chart && this.chart.hideLoading()
     }
   },
   watch: {
     'data' (newData) {
-      // if (!this.chart) return
-      // const option = this.chart.getOption()
-      // option.xAxis[0].data = newData.xAxis
-      // option.series[0].data = newData.error
-      // option.series[1].data = newData.warn
-      // option.series[2].data = newData.info
-      // option.series[3].data = newData.debug
-      // this.chart.setOption(option)
+      if (!this.chart) return
+      const option = this.chart.getOption()
+      option.xAxis[0].data = newData.xAxis
+      option.series[0].data = newData.data
+
+      this.$nextTick(() => {
+        this.chart.setOption(option)
+        this.hideLoading()
+      })
+    },
+    'loading' (newVal) {
+      newVal ? this.showLoading() : this.hideLoading()
     }
   }
 }

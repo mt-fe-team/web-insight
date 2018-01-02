@@ -4,5 +4,5 @@ module.exports = {
   root: true,
   parser: 'babel-eslint',
   // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-   extends: ["plugin:vue-libs/recommended"]
+  extends: ["plugin:vue-libs/recommended"]
 }

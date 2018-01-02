@@ -8,7 +8,7 @@
 
 <script>
 import unlock from './unlock.vue'
-import Cookies from 'js-cookie'
+import store from 'store'
 
 export default {
   components: {
@@ -27,7 +27,7 @@ export default {
       lockScreenBack.style.boxShadow = '0 0 0 0 #667aa6 inset'
       // 解锁之后跳转到锁屏之前的页面
       this.$router.push({
-        name: Cookies.get('last_page_name')
+        name: store.get('last_page_name')
       })
     }
   },

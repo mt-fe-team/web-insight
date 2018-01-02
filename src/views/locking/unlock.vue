@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+import store from 'store'
 
 export default {
   name: 'Unlock',
@@ -60,14 +60,14 @@ export default {
       this.$refs.inputEle.focus()
     },
     handleUnlock () {
-      const username = Cookies.get('username')
+      const username = store.get('username')
       if (!username) return this.$router.push({ name: 'login' })
 
       this.$store.dispatch(this.$$types.LOGIN, { username, password: this.password }).then(res => {
         this.avatorLeft = '0px'
         this.inputLeft = '400px'
         this.password = ''
-        Cookies.set('locking', 0)
+        store.set('locking', 0)
         this.$emit('on-unlock')
       }).catch(() => {
         this.$Message.error('密码错误,请重新输入')

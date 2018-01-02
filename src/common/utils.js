@@ -3,6 +3,7 @@
  */
 import moment from 'moment'
 moment.locale('zh-cn')
+import _ from 'lodash'
 
 export default {
   // 设置页面标题
@@ -48,12 +49,74 @@ export default {
       return { title: v.meta.title, name: v.name, path: '' }
     })
   },
-  // 获取7天之前的时间
-  getSevenDaysAgo () {
-    return moment().add(-7, 'days').toDate()
+
+  startOfDay (date = new Date()) {
+    return moment(date).startOf('day').toDate()
   },
-  // 获取当天零晨的时间
-  getTodayZero () {
-    return moment(moment().format('YYYY-MM-DD 00:00:00')).toDate()
+
+  endOfDay (date = new Date()) {
+    return moment(date).endOf('day').toDate()
+  },
+
+  // 根据时间段获取起始时间
+  getTimeSlot (type) {
+    const endOfTotday = moment().endOf('day').toDate()
+    const yesterday = moment().add(-1, 'days')
+
+    return {
+      'today': {
+        startTime: moment().startOf('day').toDate(),
+        endTime: endOfTotday
+      },
+      'yesterday': {
+        startTime: yesterday.startOf('day').toDate(),
+        endTime: yesterday.endOf('day').toDate()
+      },
+      'week': {
+        startTime: moment().add(-6, 'days').startOf('day').toDate(),
+        endTime: endOfTotday
+      }
+    }[type]
+  },
+
+  // 构建图表数据
+  buildChartData ({ list, groupName, chartData, startTime, endTime }) {
+    const isDay = moment(endTime).diff(moment(startTime), 'days') >= 1
+    const isWeek = moment().add(-6, 'days').startOf('day').toDate() - startTime <= 0
+    const isToday = moment().startOf('day').toDate() - startTime === 0
+
+    let formatStr = ''
+    if (!isDay) {
+      formatStr = 'hh:mm'
+    } else if (isWeek) {
+      formatStr = 'ddd'
+    } else {
+      formatStr = 'MM/DD'
+    }
+
+    const data = list.map(v => {
+      const time = moment(v.get('createdAt')).format(formatStr)
+      return { createdAt: time, [groupName]: v.get(groupName) }
+    })
+
+    const groupByTimeObj = _.groupBy(data, 'createdAt')
+
+    Object.keys(groupByTimeObj).forEach(v => {
+      groupByTimeObj[v] = _.countBy(groupByTimeObj[v], groupName)
+    })
+
+    const levelKeys = Object.keys(chartData)
+    Object.keys(groupByTimeObj).forEach(v => {
+      levelKeys.forEach(n => chartData[n].push(groupByTimeObj[v][n] || 0))
+    })
+
+    return {
+      isToday,
+      nums: _.countBy(data, groupName),
+      chartData: {
+        xAxis: Object.keys(groupByTimeObj),
+        ...chartData
+      }
+    }
   }
 }

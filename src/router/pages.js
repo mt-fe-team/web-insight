@@ -45,18 +45,19 @@ export default [
     children: [
       { path: 'index', name: 'events-index', component: _import('events/index'), meta: { title: '自定义事件' }}
     ]
-  }, {
-    path: '/error-pages',
-    name: 'error-pages',
-    inSidebar: true,
-    icon: 'bug',
-    component: Layout,
-    redirect: '/401',
-    meta: { title: '错误页面' },
-    children: [
-      { path: '401', name: 'err401', component: _import('error-pages/401'), meta: { title: '401' }},
-      { path: '500', name: 'err500', component: _import('error-pages/500'), meta: { title: '500' }},
-      { path: '404', name: 'err404', component: _import('error-pages/404'), meta: { title: '404' }}
-    ]
   }
+  // , {
+  //   path: '/error-pages',
+  //   name: 'error-pages',
+  //   inSidebar: true,
+  //   icon: 'bug',
+  //   component: Layout,
+  //   redirect: '/401',
+  //   meta: { title: '错误页面' },
+  //   children: [
+  //     { path: '401', name: 'err401', component: _import('error-pages/401'), meta: { title: '401' }},
+  //     { path: '500', name: 'err500', component: _import('error-pages/500'), meta: { title: '500' }},
+  //     { path: '404', name: 'err404', component: _import('error-pages/404'), meta: { title: '404' }}
+  //   ]
+  // }
 ]

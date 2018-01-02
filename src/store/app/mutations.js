@@ -1,10 +1,10 @@
-import Cookies from 'js-cookie'
+import store from 'store'
 import * as types from '../types'
 
 const mutations = {
   [types.TOGGLE_SIDEBAR] (state, data) {
     const targetState = !state.sidebarOpened
-    Cookies.set('sidebarStatus', ~~targetState)
+    store.set('sidebarStatus', ~~targetState)
     state.sidebarOpened = targetState
   },
 
@@ -65,7 +65,33 @@ const mutations = {
   [types.CLEARE_OPENED_MENUS] (state) {
     state.openedMenus = []
     console.log(state.openedMenus)
+  },
+
+  [types.GET_JS_CHARTDATA] (state, data) {
+    state.jsChartData = data
+    store()
+  },
+
+  [types.GET_API_CHARTDATA] (state, data) {
+    state.apiChartData = data
+  },
+
+  [types.GET_EVENT_CHARTDATA] (state, data) {
+    state.eventChartData = data
+  },
+
+  [types.JS_CHART_LOADING] (state, data) {
+    state.jsChartLoading = data
+  },
+
+  [types.API_CHART_LOADING] (state, data) {
+    state.apiChartLoading = data
+  },
+
+  [types.EVENT_CHART_LOADING] (state, data) {
+    state.eventChartLoading = data
   }
+
 }
 
 export default mutations

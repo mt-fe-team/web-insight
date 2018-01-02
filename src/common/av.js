@@ -1,13 +1,10 @@
 import AV from 'leancloud-storage'
 
-const appId = 'GAHOQoW5LU5k5MstvbjHJiQn-gzGzoHsz'
-const appKey = 'IQ7Je02a33Mm5AVkAikKwxL2'
-
 AV.init({
-  appId: appId,
-  appKey: appKey
+  appId: 'GAHOQoW5LU5k5MstvbjHJiQn-gzGzoHsz',
+  appKey: 'IQ7Je02a33Mm5AVkAikKwxL2'
 })
 
-window.localStorage.setItem('debug', 'leancloud*')
+// window.localStorage.setItem('debug', 'leancloud*')
 
 export default AV
